@@ -8,9 +8,19 @@ param FUNCTIONS_EXTENSION_VERSION string
 param FUNCTIONS_WORKER_RUNTIME string
 param WEBSITE_RUN_FROM_PACKAGE string
 param resourceGroupName string
-param APPINSIGHTS_INSTRUMENTATIONKEY string
-param APPLICATIONINSIGHTS_CONNECTION_STRING string
-param AzureWebJobsStorage string
+param AemApiPassword string
+param AemApiUserName string
+param AemHostName string
+param AemMediaAssetUploadPimQueueName string
+param AemMediaFolderCreatePimQueueName string
+param AemMetaPimQueueName string
+param AemUploadFunctionUrl string
+param AttachmentUploadUrl string
+param AzureStorageConnectionString string
+param mfun_sb_sndPrtsAsstImgMediaAssetUpReqToAEM string
+param mfun_sb_sndPrtsAsstImgMediaFldrCreReqToAEM string
+param mfun_sb_sndPrtsAsstImgMediaToAEM string
+param mfun_sch_purgePrtsAsstImgTxTables string
 
 
 // Fetch the resource ID for the Storage Account dynamically
@@ -74,6 +84,60 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
         {
           name: 'WEBSITE_RUN_FROM_PACKAGE'
           value: WEBSITE_RUN_FROM_PACKAGE // Parameterized
+        }
+
+
+        {
+          name: 'AemApiPassword'
+          value: AemApiPassword
+        }
+         {
+          name: 'AemApiUserName'
+          value: AemApiUserName
+        }
+         {
+          name: 'AemHostName'
+          value: AemHostName
+        }
+         {
+          name: 'AemMediaAssetUploadPimQueueName'
+          value: AemMediaAssetUploadPimQueueName
+        }
+         {
+          name: 'AemMediaFolderCreatePimQueueName'
+          value: AemMediaFolderCreatePimQueueName
+        }
+         {
+          name: 'AemMetaPimQueueName'
+          value: AemMetaPimQueueName
+        }
+         {
+          name: 'AemUploadFunctionUrl'
+          value: AemUploadFunctionUrl
+        }
+         {
+          name: 'AttachmentUploadUrl'
+          value: AttachmentUploadUrl
+        }
+         {
+          name: 'AzureStorageConnectionString'
+          value: AzureStorageConnectionString
+        }
+         {
+          name: 'AzureWebJobsmfun_sb_sndPrtsAsstImgMediaAssetUpReqToAEMDisabled'
+          value: mfun_sb_sndPrtsAsstImgMediaAssetUpReqToAEM
+        }
+         {
+          name: 'AzureWebJobsmfun_sb_sndPrtsAsstImgMediaFldrCreReqToAEMDisabled'
+          value: mfun_sb_sndPrtsAsstImgMediaFldrCreReqToAEM
+        }
+         {
+          name: 'AzureWebJobsmfun_sb_sndPrtsAsstImgMediaToAEMDisabled'
+          value: mfun_sb_sndPrtsAsstImgMediaToAEM
+        }
+         {
+          name: 'AzureWebJobsmfun_sch_purgePrtsAsstImgTxTablesDisabled'
+          value: mfun_sch_purgePrtsAsstImgTxTables
         }
       ]
       cors: {
