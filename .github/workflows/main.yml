@@ -30,6 +30,19 @@ env:
   APPINSIGHTS_INSTRUMENTATIONKEY : $(jq -r ".APPINSIGHTS_INSTRUMENTATIONKEY" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
   APPLICATIONINSIGHTS_CONNECTION_STRING : $(jq -r ".APPLICATIONINSIGHTS_CONNECTION_STRING" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
   AzureWebJobsStorage : $(jq -r ".AzureWebJobsStorage" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  AemApiPassword : $(jq -r ".AemApiPassword" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  AemApiUserName : $(jq -r ".AemApiUserName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  AemHostName : $(jq -r ".AemHostName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  AemMediaAssetUploadPimQueueName : $(jq -r ".AemMediaAssetUploadPimQueueName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  AemMediaFolderCreatePimQueueName : $(jq -r ".AemMediaFolderCreatePimQueueName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  AemMetaPimQueueName : $(jq -r ".AemMetaPimQueueName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  AemUploadFunctionUrl : $(jq -r ".AemUploadFunctionUrl" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  AttachmentUploadUrl : $(jq -r ".AttachmentUploadUrl" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  AzureStorageConnectionString : $(jq -r ".AzureStorageConnectionString" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  mfun_sb_sndPrtsAsstImgMediaAssetUpReqToAEM : $(jq -r ".mfun_sb_sndPrtsAsstImgMediaAssetUpReqToAEM" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  mfun_sb_sndPrtsAsstImgMediaFldrCreReqToAEM : $(jq -r ".mfun_sb_sndPrtsAsstImgMediaFldrCreReqToAEM" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  mfun_sb_sndPrtsAsstImgMediaToAEM : $(jq -r ".mfun_sb_sndPrtsAsstImgMediaToAEM" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  mfun_sch_purgePrtsAsstImgTxTables : $(jq -r ".mfun_sch_purgePrtsAsstImgTxTables" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
     
 
 jobs:
@@ -114,6 +127,18 @@ jobs:
             --parameters FUNCTIONS_WORKER_RUNTIME=${{ env.FUNCTIONS_WORKER_RUNTIME }} \
             --parameters WEBSITE_RUN_FROM_PACKAGE=${{ env.WEBSITE_RUN_FROM_PACKAGE }} \
             --parameters resourceGroupName=${{ env.resourceGroupName }} \
+            --parameters AemApiUserName=${{ env.AemApiUserName }} \
+            --parameters AemHostName=${{ env.AemHostName }} \
+            --parameters AemMediaAssetUploadPimQueueName=${{ env.AemMediaAssetUploadPimQueueName }} \
+            --parameters AemMediaFolderCreatePimQueueName=${{ env.AemMediaFolderCreatePimQueueName }} \
+            --parameters AemMetaPimQueueName=${{ env.AemMetaPimQueueName }} \
+            --parameters AemUploadFunctionUrl=${{ env.AemUploadFunctionUrl }} \
+            --parameters AttachmentUploadUrl=${{ env.AttachmentUploadUrl }} \
+            --parameters AzureStorageConnectionString=${{ env.AzureStorageConnectionString }} \
+            --parameters mfun_sb_sndPrtsAsstImgMediaAssetUpReqToAEM=${{ env.mfun_sb_sndPrtsAsstImgMediaAssetUpReqToAEM }} \
+            --parameters mfun_sb_sndPrtsAsstImgMediaFldrCreReqToAEM=${{ env.mfun_sb_sndPrtsAsstImgMediaFldrCreReqToAEM }} \
+            --parameters mfun_sb_sndPrtsAsstImgMediaToAEM=${{ env.mfun_sb_sndPrtsAsstImgMediaToAEM }} \
+            --parameters mfun_sch_purgePrtsAsstImgTxTables=${{ env.mfun_sch_purgePrtsAsstImgTxTables }} \
                        
   
     - name: Download artifact
