@@ -1,0 +1,224 @@
+name: Deploy .NET 8.0 Isolated Function App
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Choose environment to deploy'
+        required: true
+        default: dev
+        type: choice
+        options:
+          - dev
+          - qa
+          - uat
+          - prod
+
+env: 
+  ENVIRONMENT: ${{ github.event.inputs.environment }}
+  projectPath: $(jq -r ".projectPath" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  resourceGroupName: $(jq -r ".resourceGroupName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  functionAppName: $(jq -r ".functionAppName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  location: $(jq -r ".location" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  storageAccountName: $(jq -r ".storageAccountName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  appServicePlanName: $(jq -r ".appServicePlanName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  applicationInsightsName: $(jq -r ".applicationInsightsName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  logAnalyticsWorkspaceName: $(jq -r ".logAnalyticsWorkspaceName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  FUNCTIONS_EXTENSION_VERSION : $(jq -r ".FUNCTIONS_EXTENSION_VERSION" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  FUNCTIONS_WORKER_RUNTIME : $(jq -r ".FUNCTIONS_WORKER_RUNTIME" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  WEBSITE_RUN_FROM_PACKAGE : $(jq -r ".WEBSITE_RUN_FROM_PACKAGE" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  APPINSIGHTS_INSTRUMENTATIONKEY : $(jq -r ".APPINSIGHTS_INSTRUMENTATIONKEY" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  APPLICATIONINSIGHTS_CONNECTION_STRING : $(jq -r ".APPLICATIONINSIGHTS_CONNECTION_STRING" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  AzureWebJobsStorage : $(jq -r ".AzureWebJobsStorage" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  AemApiPassword : $(jq -r ".AemApiPassword" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  AemApiUserName : $(jq -r ".AemApiUserName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  AemHostName : $(jq -r ".AemHostName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  AemMediaAssetUploadPimQueueName : $(jq -r ".AemMediaAssetUploadPimQueueName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  AemMediaFolderCreatePimQueueName : $(jq -r ".AemMediaFolderCreatePimQueueName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  AemMetaPimQueueName : $(jq -r ".AemMetaPimQueueName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  AemUploadFunctionUrl : $(jq -r ".AemUploadFunctionUrl" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  AttachmentUploadUrl : $(jq -r ".AttachmentUploadUrl" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  AzureStorageConnectionString : $(jq -r ".AzureStorageConnectionString" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  mfun_sb_sndPrtsAsstImgMediaAssetUpReqToAEM : $(jq -r ".mfun_sb_sndPrtsAsstImgMediaAssetUpReqToAEM" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  mfun_sb_sndPrtsAsstImgMediaFldrCreReqToAEM : $(jq -r ".mfun_sb_sndPrtsAsstImgMediaFldrCreReqToAEM" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  mfun_sb_sndPrtsAsstImgMediaToAEM : $(jq -r ".mfun_sb_sndPrtsAsstImgMediaToAEM" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  mfun_sch_purgePrtsAsstImgTxTables : $(jq -r ".mfun_sch_purgePrtsAsstImgTxTables" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  CommonAzureServiceClientId : $(jq -r ".CommonAzureServiceClientId" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  CommonAzureServiceClientSecret : $(jq -r ".CommonAzureServiceClientSecret" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json) 
+  CommonAzureServiceScope : $(jq -r ".CommonAzureServiceScope" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  CommonAzureServiceTokenUrl : $(jq -r ".CommonAzureServiceTokenUrl" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  CommonEmailServiceCcEmail : $(jq -r ".CommonEmailServiceCcEmail" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  CommonEmailServiceFromEmail : $(jq -r ".CommonEmailServiceFromEmail" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  CommonEmailServiceToEmail : $(jq -r ".CommonEmailServiceToEmail" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  CommonEmailServiceUri : $(jq -r ".CommonEmailServiceUri" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  DataErrorBlobPath : $(jq -r ".DataErrorBlobPath" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  ErrorContainerName : $(jq -r ".ErrorContainerName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  ErrorPartsMetadataBlobPathPattern : $(jq -r ".ErrorPartsMetadataBlobPathPattern" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  HtmlImageUploadUrl : $(jq -r ".HtmlImageUploadUrl" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  HttpTimeOutMinute : $(jq -r ".HttpTimeOutMinute" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  IgnoredSpecialCharacters : $(jq -r ".IgnoredSpecialCharacters" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  ImageUploadUrl : $(jq -r ".ImageUploadUrl" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  InboundContainerName : $(jq -r ".InboundContainerName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  MaxRetryCnt : $(jq -r ".MaxRetryCnt" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  PartsAssetBatchRunInfoTableName : $(jq -r ".PartsAssetBatchRunInfoTableName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  PartsAssetPartRunInfoTableName : $(jq -r ".PartsAssetPartRunInfoTableName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  PurgePrtsAsstImgTxTablesSchedule : $(jq -r ".PurgePrtsAsstImgTxTablesSchedule" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  PurgeTime : $(jq -r ".PurgeTime" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  RetryDelayInterval : $(jq -r ".RetryDelayInterval" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  ServiceBusConnectionString : $(jq -r ".ServiceBusConnectionString" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  VisibilityDelay : $(jq -r ".VisibilityDelay" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  WEBSITE_USE_PLACEHOLDER_DOTNETISOLATED : $(jq -r ".WEBSITE_USE_PLACEHOLDER_DOTNETISOLATED" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  WEBSITE_VNET_ROUTE_ALL : $(jq -r ".WEBSITE_VNET_ROUTE_ALL" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  existingKeyVaultName : $(jq -r ".existingKeyVaultName" ./bicep/modules/parameters/${{ github.event.inputs.environment }}parameter.json)
+  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Set up .NET 8.x SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.x'
+
+    - name: Build the application
+      run: dotnet build --configuration Release ${{ env.projectPath }}
+
+    - name: Publish the application
+      run: dotnet publish --configuration Release --output ./publish ${{ env.projectPath }} --self-contained false
+    
+    - name: Zip the published files
+      run: |
+        mkdir -p artifact
+        # Zip only the contents of the publish folder, not the folder itself
+        cd ./publish
+        zip -r ../artifact/functionapp.zip .
+      
+    - name: Upload functionapp.zip artifact
+      id: uploadzipartifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: functionapp-zip
+        path: ./artifact/functionapp.zip
+
+  deploy:
+    runs-on: self-hosted
+    needs: build
+    environment: 'dev'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Check Azure CLI Version
+      run: az --version
+
+    - name: Log in to Azure
+      uses: azure/login@v2
+      with:
+        creds: >
+              {
+                "clientId":"${{ secrets.AZURE_CLIENT_ID }}",
+                "clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}",
+                "subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}",
+                "tenantId":"${{ secrets.AZURE_TENANT_ID }}"
+              }
+        enable-AzPSSession: false
+
+    - name: Install Bicep
+      run: az bicep install          
+
+        echo "projectPath=$projectPath"
+        echo "resourceGroupName=$resourceGroupName"
+        echo "functionAppName=$functionAppName"
+ 
+    - name: Deploy Azure infrastructure with Bicep
+      run: |
+        az deployment group create \
+            --resource-group ${{ env.resourceGroupName }} \
+            --template-file ./bicep/modules/Function_App.bicep \
+            --parameters APPINSIGHTS_INSTRUMENTATIONKEY=${{ env.APPINSIGHTS_INSTRUMENTATIONKEY }} \
+            --parameters APPLICATIONINSIGHTS_CONNECTION_STRING=${{ env.APPLICATIONINSIGHTS_CONNECTION_STRING }} \
+            --parameters AzureWebJobsStorage=${{ env.AzureWebJobsStorage }} \
+            --parameters functionAppName=${{ env.functionAppName }} \
+            --parameters location=${{ env.location }} \
+            --parameters storageAccountName=${{ env.storageAccountName }} \
+            --parameters appServicePlanName=${{ env.appServicePlanName }} \
+            --parameters applicationInsightsName=${{ env.applicationInsightsName }} \
+            --parameters logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }} \
+            --parameters FUNCTIONS_EXTENSION_VERSION=${{ env.FUNCTIONS_EXTENSION_VERSION }} \
+            --parameters FUNCTIONS_WORKER_RUNTIME=${{ env.FUNCTIONS_WORKER_RUNTIME }} \
+            --parameters WEBSITE_RUN_FROM_PACKAGE=${{ env.WEBSITE_RUN_FROM_PACKAGE }} \
+            --parameters resourceGroupName=${{ env.resourceGroupName }} \
+              --parameters AemApiPassword=${{ env.AemApiPassword }} \
+            --parameters AemApiUserName=${{ env.AemApiUserName }} \
+            --parameters AemHostName=${{ env.AemHostName }} \
+            --parameters AemMediaAssetUploadPimQueueName=${{ env.AemMediaAssetUploadPimQueueName }} \
+            --parameters AemMediaFolderCreatePimQueueName=${{ env.AemMediaFolderCreatePimQueueName }} \
+            --parameters AemMetaPimQueueName=${{ env.AemMetaPimQueueName }} \
+            --parameters AemUploadFunctionUrl=${{ env.AemUploadFunctionUrl }} \
+            --parameters AttachmentUploadUrl=${{ env.AttachmentUploadUrl }} \
+            --parameters AzureStorageConnectionString=${{ env.AzureStorageConnectionString }} \
+            --parameters mfun_sb_sndPrtsAsstImgMediaAssetUpReqToAEM=${{ env.mfun_sb_sndPrtsAsstImgMediaAssetUpReqToAEM }} \
+            --parameters mfun_sb_sndPrtsAsstImgMediaFldrCreReqToAEM=${{ env.mfun_sb_sndPrtsAsstImgMediaFldrCreReqToAEM }} \
+            --parameters mfun_sb_sndPrtsAsstImgMediaToAEM=${{ env.mfun_sb_sndPrtsAsstImgMediaToAEM }} \
+            --parameters mfun_sch_purgePrtsAsstImgTxTables=${{ env.mfun_sch_purgePrtsAsstImgTxTables }} \
+            --parameters CommonAzureServiceClientId=${{ env.CommonAzureServiceClientId }} \
+            --parameters CommonAzureServiceClientSecret=${{ env.CommonAzureServiceClientSecret }} \          
+            --parameters CommonAzureServiceScope=${{ env.CommonAzureServiceScope }} \
+            --parameters CommonAzureServiceTokenUrl=${{ env.CommonAzureServiceTokenUrl }} \
+            --parameters CommonEmailServiceCcEmail=${{ env.CommonEmailServiceCcEmail }} \
+            --parameters CommonEmailServiceFromEmail=${{ env.CommonEmailServiceFromEmail }} \
+            --parameters CommonEmailServiceToEmail=${{ env.CommonEmailServiceToEmail }} \
+            --parameters CommonEmailServiceUri=${{ env.CommonEmailServiceUri }} \
+            --parameters DataErrorBlobPath=${{ env.DataErrorBlobPath }} \
+            --parameters ErrorContainerName=${{ env.ErrorContainerName }} \
+            --parameters ErrorPartsMetadataBlobPathPattern=${{ env.ErrorPartsMetadataBlobPathPattern }} \
+            --parameters HtmlImageUploadUrl=${{ env.HtmlImageUploadUrl }} \
+            --parameters HttpTimeOutMinute=${{ env.HttpTimeOutMinute }} \
+            --parameters IgnoredSpecialCharacters=${{ env.IgnoredSpecialCharacters }} \
+            --parameters ImageUploadUrl=${{ env.ImageUploadUrl }} \ 
+            --parameters InboundContainerName=${{ env.InboundContainerName }} \ 
+            --parameters MaxRetryCnt=${{ env.MaxRetryCnt }} \
+            --parameters PartsAssetBatchRunInfoTableName=${{ env.PartsAssetBatchRunInfoTableName }} \ 
+            --parameters PartsAssetPartRunInfoTableName=${{ env.PartsAssetPartRunInfoTableName }} \ 
+            --parameters PurgePrtsAsstImgTxTablesSchedule=${{ env.PurgePrtsAsstImgTxTablesSchedule }} \ 
+            --parameters PurgeTime=${{ env.PurgeTime }} \ 
+            --parameters RetryDelayInterval=${{ env.RetryDelayInterval }} \
+            --parameters ServiceBusConnectionString=${{ env.ServiceBusConnectionString }} \ 
+            --parameters VisibilityDelay=${{ env.VisibilityDelay }} \ 
+            --parameters WEBSITE_USE_PLACEHOLDER_DOTNETISOLATED=${{ env.WEBSITE_USE_PLACEHOLDER_DOTNETISOLATED }} \               
+            --parameters WEBSITE_VNET_ROUTE_ALL=${{ env.WEBSITE_VNET_ROUTE_ALL }} \
+            --parameters existingKeyVaultName=${{ env.existingKeyVaultName }}        
+            
+  
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+         name: functionapp-zip  # The name of the artifact to download
+         path: ./artifact       # The path where the artifact will be stored
+
+    - name: Confirm Download Success
+      run: |
+        if [ -f ./artifact/functionapp.zip ]; then
+          echo "Artifact download successful."
+        else
+          echo "Artifact download failed!" && exit 1
+        fi
+
+    - name: Deploy to Azure Function
+      run: |
+        az functionapp deployment source config-zip \
+            --name ${{ env.functionAppName }} \
+            --resource-group ${{ env.resourceGroupName }} \
+            --src ./artifact/functionapp.zip
+
+    - name: Verify Deployment
+      run: |
+        az functionapp show \
+        --name ${{ env.functionAppName }} \
+        --resource-group ${{ env.resourceGroupName }}
