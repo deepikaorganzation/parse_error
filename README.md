@@ -1,1 +1,58 @@
-# parse_error
+Run az deployment group create \
+  az deployment group create \
+      --resource-group $(jq -r ".resourceGroupName" ./bicep/modules/parameters/devparameter.json) \
+      --template-file ./bicep/modules/Function_App.bicep \
+      --parameters APPINSIGHTS_INSTRUMENTATIONKEY=$(jq -r ".APPINSIGHTS_INSTRUMENTATIONKEY" ./bicep/modules/parameters/devparameter.json) \
+      --parameters APPLICATIONINSIGHTS_CONNECTION_STRING=$(jq -r ".APPLICATIONINSIGHTS_CONNECTION_STRING" ./bicep/modules/parameters/devparameter.json) \
+      --parameters AzureWebJobsStorage=$(jq -r ".AzureWebJobsStorage" ./bicep/modules/parameters/devparameter.json) \
+      --parameters functionAppName=$(jq -r ".functionAppName" ./bicep/modules/parameters/devparameter.json) \
+      --parameters location=$(jq -r ".location" ./bicep/modules/parameters/devparameter.json) \
+      --parameters storageAccountName=$(jq -r ".storageAccountName" ./bicep/modules/parameters/devparameter.json) \
+      --parameters appServicePlanName=$(jq -r ".appServicePlanName" ./bicep/modules/parameters/devparameter.json) \
+      --parameters applicationInsightsName=$(jq -r ".applicationInsightsName" ./bicep/modules/parameters/devparameter.json) \
+      --parameters logAnalyticsWorkspaceName=$(jq -r ".logAnalyticsWorkspaceName" ./bicep/modules/parameters/devparameter.json) \
+      --parameters FUNCTIONS_EXTENSION_VERSION=$(jq -r ".FUNCTIONS_EXTENSION_VERSION" ./bicep/modules/parameters/devparameter.json) \
+      --parameters FUNCTIONS_WORKER_RUNTIME=$(jq -r ".FUNCTIONS_WORKER_RUNTIME" ./bicep/modules/parameters/devparameter.json) \
+      --parameters WEBSITE_RUN_FROM_PACKAGE=$(jq -r ".WEBSITE_RUN_FROM_PACKAGE" ./bicep/modules/parameters/devparameter.json) \
+      --parameters resourceGroupName=$(jq -r ".resourceGroupName" ./bicep/modules/parameters/devparameter.json) \
+        --parameters AemApiPassword=$(jq -r ".AemApiPassword" ./bicep/modules/parameters/devparameter.json) \
+      --parameters AemApiUserName=$(jq -r ".AemApiUserName" ./bicep/modules/parameters/devparameter.json) \
+      --parameters AemHostName=$(jq -r ".AemHostName" ./bicep/modules/parameters/devparameter.json) \
+      --parameters AemMediaAssetUploadPimQueueName=$(jq -r ".AemMediaAssetUploadPimQueueName" ./bicep/modules/parameters/devparameter.json) \
+      --parameters AemMediaFolderCreatePimQueueName=$(jq -r ".AemMediaFolderCreatePimQueueName" ./bicep/modules/parameters/devparameter.json) \
+      --parameters AemMetaPimQueueName=$(jq -r ".AemMetaPimQueueName" ./bicep/modules/parameters/devparameter.json) \
+      --parameters AemUploadFunctionUrl=$(jq -r ".AemUploadFunctionUrl" ./bicep/modules/parameters/devparameter.json) \
+      --parameters AttachmentUploadUrl=$(jq -r ".AttachmentUploadUrl" ./bicep/modules/parameters/devparameter.json) \
+      --parameters AzureStorageConnectionString=$(jq -r ".AzureStorageConnectionString" ./bicep/modules/parameters/devparameter.json) \
+      --parameters mfun_sb_sndPrtsAsstImgMediaAssetUpReqToAEM=$(jq -r ".mfun_sb_sndPrtsAsstImgMediaAssetUpReqToAEM" ./bicep/modules/parameters/devparameter.json) \
+      --parameters mfun_sb_sndPrtsAsstImgMediaFldrCreReqToAEM=$(jq -r ".mfun_sb_sndPrtsAsstImgMediaFldrCreReqToAEM" ./bicep/modules/parameters/devparameter.json) \
+      --parameters mfun_sb_sndPrtsAsstImgMediaToAEM=$(jq -r ".mfun_sb_sndPrtsAsstImgMediaToAEM" ./bicep/modules/parameters/devparameter.json) \
+      --parameters mfun_sch_purgePrtsAsstImgTxTables=$(jq -r ".mfun_sch_purgePrtsAsstImgTxTables" ./bicep/modules/parameters/devparameter.json) \
+      --parameters CommonAzureServiceClientId=$(jq -r ".CommonAzureServiceClientId" ./bicep/modules/parameters/devparameter.json) \
+      --parameters CommonAzureServiceClientSecret=$(jq -r ".CommonAzureServiceClientSecret" ./bicep/modules/parameters/devparameter.json) \          
+      --parameters CommonAzureServiceScope=$(jq -r ".CommonAzureServiceScope" ./bicep/modules/parameters/devparameter.json) \
+      --parameters CommonAzureServiceTokenUrl=$(jq -r ".CommonAzureServiceTokenUrl" ./bicep/modules/parameters/devparameter.json) \
+      --parameters CommonEmailServiceCcEmail=$(jq -r ".CommonEmailServiceCcEmail" ./bicep/modules/parameters/devparameter.json) \
+      --parameters CommonEmailServiceFromEmail=$(jq -r ".CommonEmailServiceFromEmail" ./bicep/modules/parameters/devparameter.json) \
+      --parameters CommonEmailServiceToEmail=$(jq -r ".CommonEmailServiceToEmail" ./bicep/modules/parameters/devparameter.json) \
+      --parameters CommonEmailServiceUri=$(jq -r ".CommonEmailServiceUri" ./bicep/modules/parameters/devparameter.json) \
+      --parameters DataErrorBlobPath=$(jq -r ".DataErrorBlobPath" ./bicep/modules/parameters/devparameter.json) \
+      --parameters ErrorContainerName=$(jq -r ".ErrorContainerName" ./bicep/modules/parameters/devparameter.json) \
+      --parameters ErrorPartsMetadataBlobPathPattern=$(jq -r ".ErrorPartsMetadataBlobPathPattern" ./bicep/modules/parameters/devparameter.json) \
+      --parameters HtmlImageUploadUrl=$(jq -r ".HtmlImageUploadUrl" ./bicep/modules/parameters/devparameter.json) \
+      --parameters HttpTimeOutMinute=$(jq -r ".HttpTimeOutMinute" ./bicep/modules/parameters/devparameter.json) \
+      --parameters IgnoredSpecialCharacters=$(jq -r ".IgnoredSpecialCharacters" ./bicep/modules/parameters/devparameter.json) \
+      --parameters ImageUploadUrl=$(jq -r ".ImageUploadUrl" ./bicep/modules/parameters/devparameter.json) \ 
+      --parameters InboundContainerName=$(jq -r ".InboundContainerName" ./bicep/modules/parameters/devparameter.json) \ 
+      --parameters MaxRetryCnt=$(jq -r ".MaxRetryCnt" ./bicep/modules/parameters/devparameter.json) \
+      --parameters PartsAssetBatchRunInfoTableName=$(jq -r ".PartsAssetBatchRunInfoTableName" ./bicep/modules/parameters/devparameter.json) \ 
+      --parameters PartsAssetPartRunInfoTableName=$(jq -r ".PartsAssetPartRunInfoTableName" ./bicep/modules/parameters/devparameter.json) \ 
+      --parameters PurgePrtsAsstImgTxTablesSchedule=$(jq -r ".PurgePrtsAsstImgTxTablesSchedule" ./bicep/modules/parameters/devparameter.json) \ 
+      --parameters PurgeTime=$(jq -r ".PurgeTime" ./bicep/modules/parameters/devparameter.json) \ 
+      --parameters RetryDelayInterval=$(jq -r ".RetryDelayInterval" ./bicep/modules/parameters/devparameter.json) \
+      --parameters ServiceBusConnectionString=$(jq -r ".ServiceBusConnectionString" ./bicep/modules/parameters/devparameter.json) \ 
+      --parameters VisibilityDelay=$(jq -r ".VisibilityDelay" ./bicep/modules/parameters/devparameter.json) \ 
+      --parameters WEBSITE_USE_PLACEHOLDER_DOTNETISOLATED=$(jq -r ".WEBSITE_USE_PLACEHOLDER_DOTNETISOLATED" ./bicep/modules/parameters/devparameter.json) \               
+      --parameters WEBSITE_VNET_ROUTE_ALL=$(jq -r ".WEBSITE_VNET_ROUTE_ALL" ./bicep/modules/parameters/devparameter.json) \
+      --parameters existingKeyVaultName=$(jq -r ".existingKeyVaultName" ./bicep/modules/parameters/devparameter.json)        
+      
